@@ -1,5 +1,5 @@
-from boilerplate_remover.BoilerplateRemover import BoilerplateRemover
-from boilerplate_remover.utils.file_utils import write_string_to_file
+from src.boilerplate_remover.BoilerplateRemover import BoilerplateRemover
+from src.boilerplate_remover.utils.file_utils import write_string_to_file
 
 boilerplate_remover = BoilerplateRemover()
 

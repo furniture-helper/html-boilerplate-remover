@@ -13,7 +13,7 @@ def cache_anchor_tree(tree: Node) -> None:
 
 def load_anchor_tree_from_cache() -> Node | None:
     create_cache_directory()
-    
+
     try:
         with open(".cache/anchor_tree.pkl", "rb") as f:
             return pickle.load(f)

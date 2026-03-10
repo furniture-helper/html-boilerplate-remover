@@ -2,3 +2,5 @@ data
 output
 temp
 .cache
+src/boilerplate_remover.egg-info
+dist
