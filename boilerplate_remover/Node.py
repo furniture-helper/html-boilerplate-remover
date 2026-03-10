@@ -4,7 +4,7 @@ from typing import Optional, List, Union
 
 from bs4 import BeautifulSoup, Tag, PageElement
 
-from utils.html_utils import get_attribute, get_direct_text
+from boilerplate_remover.utils.html_utils import get_attribute, get_direct_text
 
 
 class Node:

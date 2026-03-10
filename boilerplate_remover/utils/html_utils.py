@@ -2,7 +2,7 @@ from typing import Optional
 
 from bs4 import BeautifulSoup
 
-from utils.string_utils import replace_common_values_with_hashes
+from boilerplate_remover.utils.string_utils import replace_common_values_with_hashes
 
 
 def get_attribute(element: BeautifulSoup, attr_name: str, replace_common_values: bool = True) -> str | list[str] | None:
