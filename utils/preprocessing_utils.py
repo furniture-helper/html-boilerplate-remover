@@ -17,8 +17,8 @@ def clean_soup(soup: BeautifulSoup,
     """
     if remove_tags:
         for name in (
-                'script', 'style', 'noscript', 'iframe', 'embed', 'object', 'base', 'link', 'meta', 'form', 'input',
-                'button'):
+                'script', 'style', 'noscript', 'iframe', 'embed', 'object', 'base', 'link', 'form', 'input',
+                'button', 'meta'):
             for tag in soup.find_all(name):
                 tag.decompose()
 

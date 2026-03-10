@@ -46,6 +46,9 @@ anchor_tree = load_anchor_tree_from_cache()
 if not anchor_tree:
     print("Generating anchor tree...")
     anchor_tree = generate_anchor_tree()
+    write_string_to_file(".cache/anchor_tree.txt", anchor_tree.__str__())
+    print("Caching anchor tree...")
     cache_anchor_tee(anchor_tree)
+    print("Anchor tree cached.")
 
 generate_unique_trees(anchor_tree)
