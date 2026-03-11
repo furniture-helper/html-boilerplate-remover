@@ -7,7 +7,7 @@ where = ["src"]
 
 [project]
 name = "boilerplate-remover"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
     { name = "Kaneel Dias", email = "kaneeldias@gmail.com" },
 ]

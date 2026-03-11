@@ -122,11 +122,11 @@ class Node:
         if self.id:
             attrs.append(f'id="{self.id}"')
 
-        if self.classes:
-            attrs.append(f'class="{" ".join(self.classes)}"')
+        # if self.classes:
+        #     attrs.append(f'class="{" ".join(self.classes)}"')
 
-        if self.src:
-            attrs.append(f'src="{self.src}"')
+        # if self.src:
+        #     attrs.append(f'src="{self.src}"')
 
         attr_str = " " + " ".join(attrs) if attrs else ""
         opening_tag = f"<{self.html_tag}{attr_str}>"
