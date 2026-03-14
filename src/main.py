@@ -3,7 +3,7 @@ from pathlib import Path
 from src.boilerplate_remover.BoilerplateRemover import BoilerplateRemover
 from src.boilerplate_remover.utils.file_utils import write_string_to_file
 
-boilerplate_remover = BoilerplateRemover()
+boilerplate_remover = BoilerplateRemover(cache_path=".cache/anchor_tree.pkl")
 
 
 # minimized_tree = boilerplate_remover.get_minimized_tree(

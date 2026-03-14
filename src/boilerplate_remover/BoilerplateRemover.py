@@ -8,8 +8,8 @@ from boilerplate_remover.utils.tree_utils import get_anchor_tree, build_tree, ge
 
 class BoilerplateRemover:
 
-    def __init__(self):
-        self.anchor_tree: Node = get_anchor_tree()
+    def __init__(self, cache_path: str = ".cache/anchor_tree.pkl") -> None:
+        self.anchor_tree: Node = get_anchor_tree(cache_path)
 
     def get_minimized_tree(self, file_path: str) -> Node:
         content = read_file_to_string(file_path)

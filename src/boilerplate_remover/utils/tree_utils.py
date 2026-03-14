@@ -31,8 +31,8 @@ def generate_anchor_tree(directory: str) -> Node:
     return base_tree
 
 
-def get_anchor_tree() -> Node:
-    anchor_tree = load_anchor_tree_from_cache()
+def get_anchor_tree(cache_path: str) -> Node:
+    anchor_tree = load_anchor_tree_from_cache(cache_path)
     if not anchor_tree:
         anchor_tree = generate_anchor_tree("data")
         cache_anchor_tree(anchor_tree)
