@@ -50,6 +50,10 @@ def get_unique_tree(tree: Node, comparison_tree: Optional[Node]) -> Optional[Nod
     if comparison_tree.is_unique():
         return tree
 
+    text = (tree.text or "").lower()
+    if tree.is_leaf_node() and any(term in text for term in ("404", "stock", "not found")):
+        return tree
+
     unique_node = tree.copy_without_children()
     for child in tree.children:
 

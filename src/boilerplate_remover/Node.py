@@ -81,7 +81,7 @@ class Node:
 
     def is_unique(self) -> bool:
         if self.is_leaf_node():
-            return self.count <= 5
+            return self.count <= 3
         elif self.children:
             return all(child.is_unique() for child in self.children)
         else:
