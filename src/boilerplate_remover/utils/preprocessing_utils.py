@@ -1,6 +1,15 @@
 from bs4 import BeautifulSoup, Comment
 
 
+def _first_srcset_url(value: str) -> str | None:
+    if not isinstance(value, str):
+        return None
+    first_entry = value.split(',', 1)[0].strip()
+    if not first_entry:
+        return None
+    return first_entry.split()[0] if first_entry.split() else None
+
+
 def clean_soup(soup: BeautifulSoup,
                remove_tags=True,
                remove_data_uris=True,
@@ -27,17 +36,34 @@ def clean_soup(soup: BeautifulSoup,
             comment.extract()
 
     if remove_data_uris:
+        # Keep lazy-loading/media tags that still carry real URL candidates.
+        keep_attrs = ('srcset', 'imagesrcset', 'data-brsrcset')
+
         # remove images and other tags with data: URIs in src/srcset/href
         for tag in soup.find_all():
+            # If responsive image attrs exist, normalize src to the first candidate URL.
+            for keep_attr in keep_attrs:
+                keep_val = tag.get(keep_attr)
+                if isinstance(keep_val, str) and keep_val.strip():
+                    first_url = _first_srcset_url(keep_val)
+                    if first_url:
+                        tag['src'] = first_url
+                        break
+
+            keep_tag = any(isinstance(tag.get(a), str) and tag.get(a).strip() for a in keep_attrs)
             for attr in ('src', 'href', 'srcset', 'data-src', 'data'):
                 val = tag.get(attr)
                 if not val:
                     continue
                 # handle srcset which may contain multiple items
                 if attr == 'srcset' and 'data:' in val:
+                    if keep_tag:
+                        continue
                     tag.decompose()
                     break
                 if isinstance(val, str) and val.strip().lower().startswith('data:'):
+                    if keep_tag:
+                        continue
                     tag.decompose()
                     break
 
