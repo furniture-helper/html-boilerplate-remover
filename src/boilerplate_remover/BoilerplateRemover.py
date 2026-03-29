@@ -1,9 +1,9 @@
 from bs4 import BeautifulSoup
 
 from boilerplate_remover.Node import Node
-from boilerplate_remover.utils.file_utils import read_file_to_string
+from boilerplate_remover.utils.file_utils import read_file_to_string, write_string_to_file
 from boilerplate_remover.utils.preprocessing_utils import clean_soup
-from boilerplate_remover.utils.tree_utils import get_anchor_tree, build_tree, get_unique_tree
+from boilerplate_remover.utils.tree_utils import get_anchor_tree, build_tree, get_unique_tree, generate_base_tree
 
 
 class BoilerplateRemover:
@@ -24,3 +24,6 @@ class BoilerplateRemover:
             return generate_base_tree()
 
         return unique_tree
+
+    def print_anchor_tree(self) -> None:
+        write_string_to_file("anchor_tree.txt", self.anchor_tree.__str__())

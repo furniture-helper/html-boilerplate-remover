@@ -15,6 +15,14 @@ class Node:
         self.count: int = 1
 
         self.html_tag: str = getattr(element, 'name', None)
+        if self.html_tag == "body":
+            print("Ignoring attributes for <body>")
+            self.id = None
+            self.classes = []
+            self.src = None
+            self.text = ""
+            self.populate_children(element)
+            return
 
         self.id: Optional[str] = get_attribute(element, 'id')
         self.classes: List[str] = get_attribute(element, 'class') or []
