@@ -16,7 +16,6 @@ class Node:
 
         self.html_tag: str = getattr(element, 'name', None)
         if self.html_tag == "body":
-            print("Ignoring attributes for <body>")
             self.id = None
             self.classes = []
             self.src = None
