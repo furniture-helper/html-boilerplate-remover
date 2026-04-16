@@ -25,7 +25,10 @@ class Node:
 
         self.id: Optional[str] = get_attribute(element, 'id')
         self.classes: List[str] = get_attribute(element, 'class') or []
-        self.src: Optional[str] = get_attribute(element, 'src', replace_common_values=False)
+
+        self.src: Optional[str] = get_attribute(element, 'data-src', replace_common_values=False)
+        if not self.src:
+            self.src = get_attribute(element, "src", replace_common_values=False)
 
         self.text = get_direct_text(element)
         self.populate_children(element)
@@ -148,7 +151,20 @@ class Node:
         copy_node.classes = self.classes.copy()
         copy_node.src = self.src
         copy_node.text = self.text
+        copy_node.count = self.count
         return copy_node
+
+    def trim(self) -> Node | None:
+        if self.count >= 3:
+            trimmed_node = self.copy_without_children()
+            for child in self.children:
+                trimmed_child = child.trim()
+                if trimmed_child is not None:
+                    trimmed_child.parent = trimmed_node
+                    trimmed_node.children.append(trimmed_child)
+            return trimmed_node
+        else:
+            return None
 
     # Pickle helpers: avoid serializing bs4 objects and parent cycles
     def __getstate__(self):

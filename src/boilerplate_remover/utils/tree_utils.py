@@ -28,7 +28,12 @@ def generate_anchor_tree(directory: str) -> Node:
         tree = build_tree(soup)
         base_tree.merge_with(tree)
 
-    return base_tree
+    result_tree = base_tree.copy_without_children()
+    for child in base_tree.children:
+        child = child.trim()
+        result_tree.children.append(child)
+
+    return result_tree
 
 
 def get_anchor_tree(cache_path: str) -> Node:
