@@ -1,6 +1,9 @@
 from bs4 import BeautifulSoup, Comment
 
 
+DEFAULT_CONTAINER_ID_BLACKLIST = ('friends-links',)
+
+
 def _first_srcset_url(value: str) -> str | None:
     if not isinstance(value, str):
         return None
@@ -10,12 +13,52 @@ def _first_srcset_url(value: str) -> str | None:
     return first_entry.split()[0] if first_entry.split() else None
 
 
+def _truncate_soup_to_max_lines(soup: BeautifulSoup, max_lines: int | None) -> BeautifulSoup:
+    if max_lines is None or max_lines <= 0:
+        return soup
+
+    serialized = soup.prettify()
+    lines = serialized.splitlines()
+    if len(lines) <= max_lines:
+        return soup
+
+    parser_name = getattr(getattr(soup, 'builder', None), 'NAME', None) or 'html.parser'
+    parse_feature = parser_name
+
+    # Re-parsing can add wrapper lines; tighten until prettified output fits.
+    cutoff = max_lines
+    while cutoff > 0:
+        truncated_html = "\n".join(lines[:cutoff])
+        try:
+            truncated_soup = BeautifulSoup(truncated_html, parse_feature)
+        except Exception:
+            parse_feature = 'html.parser'
+            truncated_soup = BeautifulSoup(truncated_html, parse_feature)
+
+        overflow = len(truncated_soup.prettify().splitlines()) - max_lines
+        if overflow <= 0:
+            return truncated_soup
+
+        cutoff -= max(1, overflow)
+
+    return BeautifulSoup('', parse_feature)
+
+
+def _clear_blacklisted_container_contents(soup: BeautifulSoup, blacklisted_container_ids: tuple[str, ...]) -> None:
+    for container_id in blacklisted_container_ids:
+        for container in soup.find_all(id=container_id):
+            # Keep the container node itself but remove all nested content.
+            container.clear()
+
+
 def clean_soup(soup: BeautifulSoup,
                remove_tags=True,
                remove_data_uris=True,
                strip_event_handlers=True,
                remove_style_attrs=True,
-               remove_comments=True) -> BeautifulSoup:
+               remove_comments=True,
+               max_lines: int | None = 2500,
+               blacklisted_container_ids: tuple[str, ...] = DEFAULT_CONTAINER_ID_BLACKLIST) -> BeautifulSoup:
     """
     Clean a BeautifulSoup document in-place and return it.
     - removes common non-content tags (scripts, styles, noscript, iframe, embed, object, base, link, meta)
@@ -23,7 +66,12 @@ def clean_soup(soup: BeautifulSoup,
     - strips inline event handlers (attributes starting with `on`)
     - removes `javascript:` href/src values
     - optionally removes `style` attributes
+    - clears content inside blacklisted container IDs
+    - optionally truncates serialized HTML to `max_lines` lines
     """
+    if blacklisted_container_ids:
+        _clear_blacklisted_container_contents(soup, blacklisted_container_ids)
+
     if remove_tags:
         for name in (
                 'script', 'style', 'noscript', 'iframe', 'embed', 'object', 'base', 'link', 'form', 'input',
@@ -83,4 +131,4 @@ def clean_soup(soup: BeautifulSoup,
             if remove_style_attrs and 'style' in tag.attrs:
                 del tag.attrs['style']
 
-    return soup
+    return _truncate_soup_to_max_lines(soup, max_lines)

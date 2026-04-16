@@ -26,9 +26,11 @@ class Node:
         self.id: Optional[str] = get_attribute(element, 'id')
         self.classes: List[str] = get_attribute(element, 'class') or []
 
-        self.src: Optional[str] = get_attribute(element, 'data-src', replace_common_values=False)
-        if not self.src:
-            self.src = get_attribute(element, "src", replace_common_values=False)
+        self.src: Optional[str] = None
+        if self.html_tag == "img":
+            self.src: Optional[str] = get_attribute(element, 'data-src', replace_common_values=False)
+            if not self.src:
+                self.src = get_attribute(element, "src", replace_common_values=False)
 
         self.text = get_direct_text(element)
         self.populate_children(element)

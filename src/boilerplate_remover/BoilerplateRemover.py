@@ -17,7 +17,7 @@ class BoilerplateRemover:
 
     def get_minimized_tree_from_string(self, html_content: str) -> Node:
         soup = BeautifulSoup(html_content, 'lxml')
-        clean_soup(soup)
+        soup = clean_soup(soup)
         tree = build_tree(soup)
         unique_tree = get_unique_tree(tree, self.anchor_tree)
         if unique_tree is None:
