@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 from boilerplate_remover.Node import Node
 from boilerplate_remover.utils.cache_utils import load_anchor_tree_from_cache, cache_anchor_tree
-from boilerplate_remover.utils.file_utils import get_all_files_in_directory, read_file_to_string, write_string_to_file
+from boilerplate_remover.utils.file_utils import get_all_files_in_directory, read_file_to_string
 from boilerplate_remover.utils.preprocessing_utils import clean_soup
 
 
@@ -24,7 +24,6 @@ def generate_anchor_tree(directory: str) -> Node:
         content = read_file_to_string(file_path)
         soup = BeautifulSoup(content, 'lxml')
         soup = clean_soup(soup)
-        write_string_to_file(f".tmp/cleaned_{file_path.split('/')[-1]}", soup.prettify())
 
         tree = build_tree(soup)
         base_tree.merge_with(tree)
