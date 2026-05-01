@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup, Comment
 
-
-DEFAULT_CONTAINER_ID_BLACKLIST = ('friends-links',)
+DEFAULT_CONTAINER_ID_BLACKLIST = ('friends-links ncached', "mycity",)
 
 
 def _first_srcset_url(value: str) -> str | None:
@@ -57,7 +56,7 @@ def clean_soup(soup: BeautifulSoup,
                strip_event_handlers=True,
                remove_style_attrs=True,
                remove_comments=True,
-               max_lines: int | None = 2500,
+               max_lines: int | None = 10000,
                blacklisted_container_ids: tuple[str, ...] = DEFAULT_CONTAINER_ID_BLACKLIST) -> BeautifulSoup:
     """
     Clean a BeautifulSoup document in-place and return it.
@@ -74,7 +73,7 @@ def clean_soup(soup: BeautifulSoup,
 
     if remove_tags:
         for name in (
-                'script', 'style', 'noscript', 'iframe', 'embed', 'object', 'base', 'link', 'form', 'input',
+                'script', 'style', 'noscript', 'iframe', 'embed', 'object', 'base', 'link', 'input',
                 'button', 'meta'):
             for tag in soup.find_all(name):
                 tag.decompose()
